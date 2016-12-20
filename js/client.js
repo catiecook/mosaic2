@@ -1,28 +1,32 @@
 // Edit me. Feel free to create additional .js files.
  'use strict'
  document.addEventListener("DOMContentLoaded", function(event) {
+
+     var canvas = document.getElementById('original');
+     var ctx = canvas.getContext('2d');
+     var sourceImage = new Image();
+     var finalCanvas = document.getElementById('mosaic');
+     //load the image
+     var imageLoad = document.getElementById("photo--upload");
+     imageLoad.addEventListener('change', handleImage, false);
+    //  handleImage()
+
+
    var SVG_URL = '/color/';
    //get canvas
-   var canvas = document.getElementById('original');
-   var ctx = canvas.getContext('2d');
-   var sourceImage;
-   var finalCanvas = document.getElementById('mosaic');
-   //load the image
-   var imageLoad = document.getElementById("photo--upload");
-   imageLoad.addEventListener('change', handleImage, false);
 
 //everything runs on change of canvas
   function handleImage(e) {
-    console.log("image loaded function");
     var reader = new FileReader();
     reader.onload = function(event){
       sourceImage = new Image();
       //once the image loads
       sourceImage.onload = function() {
-        // canvas.width = sourceImage.width;
-        // canvas.height = sourceImage.height;
+        console.log("source image loaded")
+        canvas.width = sourceImage.width;
+        canvas.height = sourceImage.height;
       //run calls all worker funcitons
-         run(sourceImage);
+        run(sourceImage);
       }
       sourceImage.src = event.target.result;
     }
@@ -79,7 +83,6 @@
 
   function drawMos(image) {
     console.log("drawMos");
-
     var chunkSize, chunk, tileData;
     var promise = [];
     //making the canvas the correct dimensions
@@ -171,6 +174,7 @@
   }
 
 //reference http://stackoverflow.com/questions/34913541/adding-an-uploaded-file-as-an-image-element-in-an-svg
+
   function getImage() {
     var reader = new FileReader();
     reader.onload = function(e) {
