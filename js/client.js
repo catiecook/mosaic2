@@ -84,8 +84,12 @@
 
   function drawMos(image) {
     var chunkSize, chunk, tileData;
+    var hexArray = [];
+    var positions = [];
     var allSvg = [];
     var masterSvg = [];
+
+
     //making the canvas the correct dimensions
     canvas.width = image.width;
     canvas.height = image.height;
@@ -102,23 +106,27 @@
         var posX = data.x;
         var posY = data.y;
 
-        allSvg.push({data: fetch('/color/' + hex), x: posX, y: posY})
+        hexArray.push(hex)
+        positions.push({x: posX, y: posY})
+        //push promises into array of objects
+        //allSvg.push({data: fetch('/color/' + hex), x: posX, y: posY})
       })
     }
-    Promise.all(allSvg)
-    .then(function(response) {
-      // console.log("here", data);
-      return response;
-    }).then(function(data) {
-    }).catch(function(err) {
-      console.log(err);
+    Promise.all(hexArray.map(hex => fetch('/color/' + hex)))
+      .then(data => Promise.all(data.map(r => r.text()) ))
+      .then(result => {
+        console.log(positions);
+        for(var i = 0; i < result.length; i++) {
+          masterSvg.push({svg: result[i], x: positions[i].x, y: positions[i].y})
+        }
+        console.log(masterSvg);
     })
 
     // console.log("here", allSvg);
+    // for(var i = 0; i < allSvg.length; i++){
+    //   console.log(allSvg[i].data);
+    // }
 
-    for(var i = 0; i < allSvg.length; i++){
-      console.log(allSvg[i].data);
-    }
     renderRows(allSvg)
   }
 
@@ -136,8 +144,8 @@
     //   }
     //   img.src = url;
     // })
-
   };
+
 
   //***got the equation for rgb -> hex conversion functions at http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
   function compToHex(item) {
@@ -154,55 +162,6 @@
     fetch(svgUrl);
   }
 
-  // function createSVGUrl(svg) {
-  //   console.log("make SVG function");
-  //   var blob = new Blob([svg], {type: 'image/svg+xml;charset=utf-8'});
-  //   return DOMURL.createObjectURL(blob);
-  // };
-  //
-  // function renderTile(ctx, svg, position) {
-  //   console.log("render tiles function");
-  //
-  //   var img = new Image();
-  //   var url = createSVGUrl(svg);
-  //   img.onload = function () {
-  //     try {
-  //       ctx.drawImgae(img, position.x, position.y);
-  //     }
-  //     catch(err) {
-  //       console.log(err);
-  //     }
-  //   }
-  //   img.src = url;
-  // };
-
-//funciton returning single SVG from route
-  // function getSVG(pixelData) {
-  //   var hex = pixelData.hex;
-  //   console.log('/color/' + hex);
-  //   var test;
-  //   fetch('/color/' + hex)
-  //   .then(function(response) {
-  //     // console.log(response);
-  //     return response.text();
-  //   }).then(function(data) {
-  //     console.log(data);
-  //   }).catch(function(err) {
-  //     console.log(err);
-  //   });
-  //   return test;
-  // };
-
-//not needed because of image upload
-  // function httpGet(url) {
-  //   console.log("get image url??");
-  //   return new Promise((res, rej)=> {
-  //     var require = new XMLHttpRequest();
-  //     request.open('GET', url);
-  //     request.onload = (() => {
-  //       res(request.response)
-  //     })
-  //   })
   // };
 
 function run(image) {
