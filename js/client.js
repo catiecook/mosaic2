@@ -117,7 +117,6 @@
         for(var i = 0; i < result.length; i++) {
           masterSvg.push({svg: result[i], x: positions[i].x, y: positions[i].y})
         }
-        console.log(hexArray);
         renderRows(hexArray);
     })
   }
