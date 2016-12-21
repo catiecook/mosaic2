@@ -89,7 +89,6 @@
     var allSvg = [];
     var masterSvg = [];
 
-
     //making the canvas the correct dimensions
     canvas.width = image.width;
     canvas.height = image.height;
@@ -115,35 +114,28 @@
     Promise.all(hexArray.map(hex => fetch('/color/' + hex)))
       .then(data => Promise.all(data.map(r => r.text()) ))
       .then(result => {
-        console.log(positions);
         for(var i = 0; i < result.length; i++) {
           masterSvg.push({svg: result[i], x: positions[i].x, y: positions[i].y})
         }
-        console.log(masterSvg);
+        console.log(hexArray);
+        renderRows(hexArray);
     })
-
-    // console.log("here", allSvg);
-    // for(var i = 0; i < allSvg.length; i++){
-    //   console.log(allSvg[i].data);
-    // }
-
-    renderRows(allSvg)
   }
 
   function renderRows(arr) {
-    // for(var i =0; i< arr.length)
-    // arr.forEach(function(data){
-    //   console.log("here");
-    //   var img = new Image();
-    //   var svgBlob = new Blob(data, {type: 'image/svg+xml'});
-    //   var url = DOMURL.createObjectURL(svgBlob);
-    //   console.log(url);
-    //   img.onload = function () {
-    //     finalCtx.drawImage(img, arr.x, arr.y);
-    //     DOMURL.revokeObjectURL(url);
-    //   }
-    //   img.src = url;
-    // })
+    // for (var i = 0; i < arr.length; i++){
+    //   console.log(arr[i]);
+      var img = new Image();
+      var svgBlob = new Blob(arr, {type: 'image/svg+xml'});
+      var url = DOMURL.createObjectURL(svgBlob);
+      console.log(url);
+      img.onload = function () {
+        finalCtx.drawImage(img, arr.x, arr.y);
+        DOMURL.revokeObjectURL(url);
+      }
+      img.src = url;
+    // }
+
   };
 
 
@@ -168,14 +160,5 @@ function run(image) {
   // getTileData(image)
   drawMos(image);
 
-
-    // var input = document.getElementById('mosaic');
-    // input.addEventListener('change', function() {
-    //   console.log("something changed");
-    //   handleImage.call(
-    //     this.files[0], function(image) {
-    //       var canvas = drawMos(image);
-    //     })
-    // }, false)
   };
  }); //end doc listen
