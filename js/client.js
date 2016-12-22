@@ -4,17 +4,33 @@
   //reference https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas
   var DOMURL = window.URL || window.webkitURL || window; //to be used in tile-rendering
 
-  var canvas = document.getElementById('original');
+  //render original image
+  var originalCanvas = document.getElementById('original');
+  var originalContext = originalCanvas.getContext('2d');
+
+  //canvas for getting OG image data and not show process on screen
+  var canvas = document.createElement('canvas');
   var ctx = canvas.getContext('2d');
   var sourceImage = new Image();
-  var finalCanvas = document.getElementById('mosaic');
-  var finalCtx = canvas.getContext('2d');
      //load the image
   var imageLoad = document.getElementById("photo--upload");
   imageLoad.addEventListener('change', handleImage, false);
-  //handleImage()
+  imageLoad.addEventListener('change', loadOriginalImage, false);
 
-
+  function loadOriginalImage(e) {
+    var reader = new FileReader();
+      reader.onload = function(event){
+        var img = new Image();
+        img.onload = function() {
+          originalCanvas.width = img.width;
+          originalCanvas.height = img.height;
+          originalContext.drawImage(img, 0, 0);
+        }
+        img.src = event.target.result;
+      }
+      reader.readAsDataURL(e.target.files[0]);
+      console.log("Showing original Image");
+  }
   //pull in URL to gethttprequest + :hex inside a promise.all
   //get canvas
 
@@ -25,7 +41,6 @@
       sourceImage = new Image();
       //once the image loads
       sourceImage.onload = function() {
-        console.log("source image loaded")
         canvas.width = sourceImage.width;
         canvas.height = sourceImage.height;
       //run calls all worker funcitons
@@ -38,39 +53,33 @@
 
   //function to get image meta data, and coordinates associated with it.
   function makeTile(imageData, x, y) {
-    console.log("makeTile");
     this.hex = rgbToHex(imageData);
     this.x = x * TILE_WIDTH;
     this.y = y * TILE_HEIGHT;
   };
 
   function readImageData(sourceImage) {
-    console.log("readImageData function");
     //divide the image into 16x16px tiles
     canvas.width = (sourceImage.width / TILE_WIDTH);
     canvas.height = (sourceImage.height / TILE_HEIGHT);
     //draw the image starting at x,y coordinates of 0, 0
     ctx.drawImage(sourceImage, 0, 0, canvas.width, canvas.height);
-    console.log(ctx);
     return ctx;
   };
 
 //getting initial data for tiles
   function getTileData(sourceImage) {
-
     var counter = 0
     var tile = [];
-  //read original image data to be placed into tiles
+    //read original image data to be placed into tiles
     var context = readImageData(sourceImage);
-
-  //numX and numY is the width and heigh of the image. Variable to change upon uploaded image
+    //numX and numY is the width and heigh of the image. Variable to change upon uploaded image
     var numX = sourceImage.width / TILE_WIDTH;
     var numY = sourceImage.height / TILE_HEIGHT;
-
-  //getImageData built in pixel data reader function from canvas
-  //returns the RGB
+    //getImageData built in pixel data reader function from canvas
+    //returns the RGB
     var data = context.getImageData(0, 0, numX, numY).data;
-  //for loop pushing the hex color into object typedArray
+    //for loop pushing the hex color into object typedArray
     for(var row = 0; row < numY; row++) {
       for(var col = 0; col < numX; col++) {
         //make new tile instance
@@ -107,8 +116,6 @@
 
         hexArray.push(hex)
         positions.push({x: posX, y: posY})
-        //push promises into array of objects
-        //allSvg.push({data: fetch('/color/' + hex), x: posX, y: posY})
       })
     }
     Promise.all(hexArray.map(hex => fetch('/color/' + hex)))
@@ -117,25 +124,46 @@
         for(var i = 0; i < result.length; i++) {
           masterSvg.push({svg: result[i], x: positions[i].x, y: positions[i].y})
         }
-        renderRows(hexArray);
+        renderRows(hexArray, positions);
     })
   }
 
-  function renderRows(arr) {
-    // for (var i = 0; i < arr.length; i++){
-    //   console.log(arr[i]);
+  function renderRows(arr, coords) {
+    var canvas = document.getElementById('mosaic');
+    var ctx = canvas.getContext('2D');
+    var i = 0; //counter for coords to keep up with forEach
+    arr.forEach(function(data) {
+      //represents each svg image loaded
       var img = new Image();
-      var svgBlob = new Blob(arr, {type: 'image/svg+xml'});
+      console.log("image", img);
+      //make new blob
+      var svgBlob = getBlob([data])
+      //pass in blob
       var url = DOMURL.createObjectURL(svgBlob);
-      console.log(url);
-      img.onload = function () {
-        finalCtx.drawImage(img, arr.x, arr.y);
-        DOMURL.revokeObjectURL(url);
+      //not stepping into here
+      img.onload = function() {
+        try {
+          console.log("image load");
+          ctx.drawImage(img, coords[i].x, coords[i].y);
+          ctx.imageSmoothingEnabled = false;
+          ctx.mozImageSmoothingEnabled = false;
+          //release object/image because it isn't needed anymore
+          DOMURL.revokeObjectURL(url);
+          i++;
+        } catch(e) {
+          console.log("in error");
+          throw new Error("image load didn't work");
+        }
       }
       img.src = url;
-    // }
-
+    })
+    return canvas
   };
+
+  function getBlob([data]) {
+    var svgBlob = new Blob([data], {type: 'image/svg+xml'});
+    return svgBlob;
+  }
 
 
   //***got the equation for rgb -> hex conversion functions at http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
