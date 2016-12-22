@@ -163,7 +163,7 @@
   function renderTile(context, svgBlob, coords, url) {
     //not stepping into here
     loadImage(url, function(){
-      console.log("callback function");
+      console.log("callback function finished, rendering tile....");
       ctx.drawImage(img, coords[i].x, coords[i].y);
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
@@ -178,7 +178,6 @@
     var img = new Image();
     img.onload = callback;
     img.src = url;
-    return img;
   };
 
   //***got the equation for rgb -> hex conversion functions at http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
