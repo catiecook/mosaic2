@@ -141,7 +141,7 @@
       //pass in blob
       var url = getUrl(svgBlob);
       renderTile(ctx, svgBlob, coords, url);
-      
+
     });
     return canvas
   };
@@ -175,7 +175,7 @@
 
   //callback to handle .onload() timing
   function loadImage(url, callback) {
-    console.log("in callback");
+    // console.log("in callback");
     var img = new Image();
     img.onload = callback;
     img.src = url;
