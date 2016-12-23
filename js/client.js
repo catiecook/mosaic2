@@ -138,13 +138,13 @@
     var i = 0; //counter for coords to keep up with forEach
     arr.forEach(function(data) {
       var img = new Image()
-      console.log(img);
       var svgBlob = getBlob([data]);
       //pass in blob
       var url = getUrl(svgBlob);
+      img.src = url;
       img.onload = function() {
+        console.log("image load");
         try {
-          console.log("image load");
           ctx.drawImage(img, coords[i].x, coords[i].y);
           ctx.imageSmoothingEnabled = false;
           ctx.mozImageSmoothingEnabled = false;
@@ -156,7 +156,7 @@
           throw new Error("image load didn't work");
         }
       }
-      img.src = url;
+
     })
     return canvas
   };
