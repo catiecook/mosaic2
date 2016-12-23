@@ -137,12 +137,27 @@
   function renderRows(arr, coords) {
     var i = 0; //counter for coords to keep up with forEach
     arr.forEach(function(data) {
+      var img = new Image()
+      console.log(img);
       var svgBlob = getBlob([data]);
       //pass in blob
       var url = getUrl(svgBlob);
-      renderTile(ctx, svgBlob, coords, url);
-
-    });
+      img.onload = function() {
+        try {
+          console.log("image load");
+          ctx.drawImage(img, coords[i].x, coords[i].y);
+          ctx.imageSmoothingEnabled = false;
+          ctx.mozImageSmoothingEnabled = false;
+          //release object/image because it isn't needed anymore
+          DOMURL.revokeObjectURL(url);
+          i++;
+        } catch(e) {
+          console.log("in error");
+          throw new Error("image load didn't work");
+        }
+      }
+      img.src = url;
+    })
     return canvas
   };
   //reference: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas
@@ -161,25 +176,25 @@
     DOMURL.revokeObjectURL(url);
   };
 
-  function renderTile(context, svgBlob, coords, url) {
-    //not stepping into here
-    loadImage(url, function(){
-      console.log("callback function finished, rendering tile....");
-      ctx.drawImage(img, coords[i].x, coords[i].y);
-      ctx.imageSmoothingEnabled = false;
-      ctx.mozImageSmoothingEnabled = false;
-      revokeUrl(url)
-      i++;
-    });
-  };
-
-  //callback to handle .onload() timing
-  function loadImage(url, callback) {
-    // console.log("in callback");
-    var img = new Image();
-    img.onload = callback;
-    img.src = url;
-  };
+  // function renderTile(context, svgBlob, coords, url) {
+  //   //not stepping into here
+  //   loadImage(url, function(){
+  //     console.log("callback function finished, rendering tile....");
+  //     ctx.drawImage(img, coords[i].x, coords[i].y);
+  //     ctx.imageSmoothingEnabled = false;
+  //     ctx.mozImageSmoothingEnabled = false;
+  //     revokeUrl(url)
+  //     i++;
+  //   });
+  // };
+  //
+  // //callback to handle .onload() timing
+  // function loadImage(url, callback) {
+  //   // console.log("in callback");
+  //   var img = new Image();
+  //   img.onload = callback;
+  //   img.src = url;
+  // };
 
   //***got the equation for rgb -> hex conversion functions at http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
   function compToHex(item) {
