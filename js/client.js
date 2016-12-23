@@ -141,6 +141,7 @@
       //pass in blob
       var url = getUrl(svgBlob);
       renderTile(ctx, svgBlob, coords, url);
+      
     });
     return canvas
   };
