@@ -4,8 +4,22 @@
  document.addEventListener("DOMContentLoaded", function(event) {
   //reference https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas
   var DOMURL = window.URL || window.webkitURL || window;
+  var tooBig = false;
 
   //render original image
+  var imageLoad = document.getElementById("photo--upload");
+  imageLoad.addEventListener('change', function() {
+    var fileSize = imageLoad.files[0].size;
+    console.log("filesize", fileSize)
+    if(fileSize > 50000){
+      console.log("too big");
+      alert("the file is too large, choose something 250px square or smaller.")
+      document.getElementById('photo--upload').value = "";
+      var tooBig = true;
+      return tooBig;
+    }
+  });
+
   var originalCanvas = document.getElementById('original');
   var originalContext = originalCanvas.getContext('2d');
 
@@ -15,42 +29,41 @@
 
   var sourceImage = new Image();
   //load the actual image
-  var imageLoad = document.getElementById("photo--upload");
-  imageLoad.addEventListener('change', handleImage, false);
-  imageLoad.addEventListener('change', loadOriginalImage, false);
 
-  //show OG image before mosaic
-  function loadOriginalImage(e) {
-    var reader = new FileReader();
-    reader.onload = function(event){
-      var img = new Image();
-      img.onload = function() {
-        originalCanvas.width = img.width;
-        originalCanvas.height = img.height;
-        originalContext.drawImage(img, 0, 0);
-      }
-      img.src = event.target.result;
-    }
-    reader.readAsDataURL(e.target.files[0]);
-  };
+      imageLoad.addEventListener('change', handleImage, false);
+      imageLoad.addEventListener('change', loadOriginalImage, false);
 
-//everything runs on change of input
-  function handleImage(e) {
-    var reader = new FileReader();
-    reader.onload = function(event){
-      sourceImage = new Image();
-      //once the image loads
-      sourceImage.onload = function() {
-        canvas.width = sourceImage.width;
-        canvas.height = sourceImage.height;
-        //run calls all worker funcitons
-        run(sourceImage);
-      }
-      sourceImage.src = event.target.result;
-    }
-    reader.readAsDataURL(e.target.files[0]);
-  };
+      //show OG image before mosaic
+      function loadOriginalImage(e) {
+          var reader = new FileReader();
+          reader.onload = function(event){
+            var img = new Image();
+            img.onload = function() {
+              originalCanvas.width = img.width;
+              originalCanvas.height = img.height;
+              originalContext.drawImage(img, 0, 0);
+            }
+            img.src = event.target.result;
+          }
+          reader.readAsDataURL(e.target.files[0]);
+      };
 
+    //everything runs on change of input
+      function handleImage(e) {
+        var reader = new FileReader();
+        reader.onload = function(event){
+          sourceImage = new Image();
+          //once the image loads
+          sourceImage.onload = function() {
+            canvas.width = sourceImage.width;
+            canvas.height = sourceImage.height;
+            //run calls all worker funcitons
+            run(sourceImage);
+          }
+          sourceImage.src = event.target.result;
+        }
+        reader.readAsDataURL(e.target.files[0]);
+      };
   //function to get image meta data, and coordinates associated with it.
   function makeTile(imageData, x, y) {
     this.hex = rgbToHex(imageData);
