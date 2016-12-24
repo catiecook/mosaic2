@@ -1,8 +1,9 @@
 // Edit me. Feel free to create additional .js files.
  'use strict'
+
  document.addEventListener("DOMContentLoaded", function(event) {
   //reference https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas
-  var DOMURL = window.URL || window.webkitURL || window; //to be used in tile-rendering
+  var DOMURL = window.URL || window.webkitURL || window;
 
   //render original image
   var originalCanvas = document.getElementById('original');
@@ -11,11 +12,6 @@
   //canvas for getting OG image data and not show process on screen
   var canvas = document.createElement('canvas');
   var ctx = canvas.getContext('2d');
-
-
-  //
-  // var finalCanvas = document.getElementById('mosaic');
-  // var finalCtx = canvas.getContext('2d');
 
   var sourceImage = new Image();
   //load the actual image
@@ -127,6 +123,7 @@
       //re-allocate to next chunk
       chunk = tileData.splice(0, chunkSize)
     }
+
     //map thru array of hex values, return fetch promises into array and may thru that arry, resolving each piece accordingly.
     Promise.all(hexArray.map(hex => fetch('/color/' + hex)))
       .then(data => Promise.all(data.map(r => r.text()) ))
@@ -197,5 +194,4 @@
     drawMos(image);
   };
 
-
- }); //end doc listen
+}); //end doc listen
