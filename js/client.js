@@ -4,19 +4,17 @@
  document.addEventListener("DOMContentLoaded", function(event) {
   //reference https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas
   var DOMURL = window.URL || window.webkitURL || window;
-  var tooBig = false;
 
   //render original image
   var imageLoad = document.getElementById("photo--upload");
   imageLoad.addEventListener('change', function() {
     var fileSize = imageLoad.files[0].size;
-    console.log("filesize", fileSize)
+    console.log("filesize", fileSize);
     if(fileSize > 50000){
       console.log("too big");
-      alert("the file is too large, choose something 250px square or smaller.")
+      alert("the file is too large, choose something 250px square or smaller.");
       document.getElementById('photo--upload').value = "";
-      var tooBig = true;
-      return tooBig;
+      return;
     }
   });
 
