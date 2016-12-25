@@ -10,7 +10,7 @@
   imageLoad.addEventListener('change', function() {
     var fileSize = imageLoad.files[0].size;
     console.log("filesize", fileSize);
-    if(fileSize > 50000){
+    if(fileSize > 48000){
       console.log("too big");
       alert("the file is too large, choose something 250px square or smaller.");
       document.getElementById('photo--upload').value = "";
@@ -116,9 +116,11 @@
 
     chunkSize = image.width / TILE_WIDTH;
     tileData = getTileData(image);
+
     //split tiles into 16x16 chunks
     chunk = tileData.splice(0, chunkSize)
     //while chunks exist break it into arrays of data
+
     while(chunk.length !== 0) {
       for(var i = 0; i< chunk.length; i++){
         chunk.map(function(data) {

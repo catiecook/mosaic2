@@ -7,15 +7,22 @@ html {
   margin: 0 auto;
   font-family: 'Open Sans', sans-serif;
   font-weight: 300;
-  font-size: 1em;
+  font-size: 1.6em;
 }
 
 h1 {
-  font-weight: bold;
+  font-family: 'Open Sans', sans-serif;
+  font-variant: small-caps;
+  font-weight: 400;
 }
 
 input {
-  padding: .3em;
+  padding: 0 .3em;
+}
+
+.small {
+  font-size: .6em;
+  padding-bottom: 5%;
 }
 
 .upload--container {
