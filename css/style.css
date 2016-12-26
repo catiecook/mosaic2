@@ -20,6 +20,11 @@ input {
   padding: 0 .3em;
 }
 
+.warning {
+  font-size: .6em;
+  padding-top: 3%;
+}
+
 .small {
   font-size: .6em;
   padding-bottom: 5%;

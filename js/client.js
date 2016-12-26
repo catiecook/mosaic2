@@ -7,15 +7,12 @@
 
   //render original image
   var imageLoad = document.getElementById("photo--upload");
+
   imageLoad.addEventListener('change', function() {
     var fileSize = imageLoad.files[0].size;
-    console.log("filesize", fileSize);
-    if(fileSize > 48000){
-      console.log("too big");
-      alert("the file is too large, choose something 250px square or smaller.");
+      document.querySelector(".warning").innerHTML = "The file is too large, choose something 250px square or smaller.";
       document.getElementById('photo--upload').value = "";
       return;
-    }
   });
 
   var originalCanvas = document.getElementById('original');
@@ -114,13 +111,14 @@
     var allSvg = [];
     var masterSvg = [];
 
+    //set it so each chunk equalls 16x16px squares
     chunkSize = image.width / TILE_WIDTH;
     tileData = getTileData(image);
 
     //split tiles into 16x16 chunks
     chunk = tileData.splice(0, chunkSize)
-    //while chunks exist break it into arrays of data
 
+    //while chunks exist break it into arrays of data
     while(chunk.length !== 0) {
       for(var i = 0; i< chunk.length; i++){
         chunk.map(function(data) {
@@ -148,6 +146,7 @@
     })
   };
 
+  //render the rows, each thru the array or svg and (x.y) positions, and place onto screen.
   function renderRows(arr, ctx, canvas) {
     arr.forEach(function(eachData) {
       renderTile(ctx, eachData.svg, {x: eachData.x, y: eachData.y})
