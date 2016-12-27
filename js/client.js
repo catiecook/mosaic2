@@ -10,11 +10,11 @@
 
   imageLoad.addEventListener('change', function() {
     var fileSize = imageLoad.files[0].size;
-    if(fileSize > 48000){
-      document.querySelector(".warning").innerHTML = "The file is too large, choose something 250px square or smaller.";
-      document.getElementById('photo--upload').value = "";
-      return;
-    }
+    // if(fileSize > 4800000){
+    //   document.querySelector(".warning").innerHTML = "The file is too large, choose something 250px square or smaller.";
+    //   document.getElementById('photo--upload').value = "";
+    //   return;
+    // }
 
   });
 
@@ -139,6 +139,7 @@
     }
 
     //map thru array of hex values, return fetch promises into array and may thru that arry, resolving each piece accordingly.
+
     Promise.all(hexArray.map(hex => fetch('/color/' + hex)))
       .then(data => Promise.all(data.map(r => r.text()) ))
       .then(result => {
