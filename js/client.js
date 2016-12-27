@@ -137,23 +137,41 @@
       chunk = tileData.splice(0, chunkSize)
     }
 
-    //map thru array of hex values, return fetch promises into array and may thru that arry, resolving each piece accordingly.
+    var indexCount = 0;
+    var i = 0;
+    function fetchNextColor() {
+      hexFetch(hexArray[indexCount])
+        .then(function(response){
+          return response.text();
+        })
+        .then(function(result){
+          console.log(result);
+          masterSvg.push({svg: result, x: positions[i].x, y: positions[i].y})
+          indexCount++;
+          i++;
+          if(indexCount >= hexArray.length) {
+            renderRows(masterSvg, finalCtx, finalCanvas);
+          } else {
+            fetchNextColor();
+          }
+        });
+    }
 
-    Promise.all(hexArray.map(hex => fetch('/color/' + hex)))
-      .then(data => Promise.all(data.map(r => r.text()) ))
-      .then(result => {
-        for(var i = 0; i < result.length; i++) {
-          masterSvg.push({svg: result[i], x: positions[i].x, y: positions[i].y})
-        }
-        renderRows(masterSvg, finalCtx, finalCanvas);
-    })
-  };
+    fetchNextColor();
+
+};
+
 
   //render the rows, each thru the array or svg and (x.y) positions, and place onto screen.
   function renderRows(arr, ctx, canvas) {
-    arr.forEach(function(eachData) {
-      renderTile(ctx, eachData.svg, {x: eachData.x, y: eachData.y})
+    arr.forEach(function(data) {
+      renderTile(ctx, data.svg, {x: data.x, y: data.y})
     });
+
+  }
+
+  function hexFetch(hex){
+      return fetch('/color/' + hex)
   }
 
   //reference: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas
