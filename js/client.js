@@ -138,36 +138,42 @@
       chunk = tileData.splice(0, chunkSize)
     }
 
-    promises(hexArray);
+    //counters for while loop
+    var indexCount = 0;
+    var i = 0;
+    console.log("1 BEFORE", masterSvg);
+    while (indexCount < hexArray.length){
+      hexFetch(hexArray[indexCount])
+        .then(function(response){
+          //returns promise that resolves with text/string
+          return response.text()
+        })
+        .then(function(result){
+          masterSvg.push({svg: result, x: positions[i].x, y: positions[i].y})
+          i++
+        })
+      indexCount++
+    }
+    Promise.all(masterSvg).then(function(){
+      console.log("data", masterSvg);
+      renderRows(masterSvg, finalCtx, finalCanvas);
+    })
+
     //map thru array of hex values, return fetch promises into array and may thru that arry, resolving each piece accordingly.
-
-
 };
 
-function promises(hexArray){
-  Promise.all(hexArray.map(hex => fetch('/color/' + hex)))
-    .then(data => Promise.all(data.map(r => r.text()) ))
-    .then(result => {
-      for(var i = 0; i < result.length; i++) {
-        masterSvg.push({svg: result[i], x: positions[i].x, y: positions[i].y})
-      }
-    renderRows(masterSvg, finalCtx, finalCanvas);
-  })
-}
-
-  function hexFetch(hex){
-      return new Promise(fetch('/color/'+hex), resolve, reject)
-  }
-
-  function dataString(data) {
-    return data.text()
-  }
 
   //render the rows, each thru the array or svg and (x.y) positions, and place onto screen.
   function renderRows(arr, ctx, canvas) {
-    arr.forEach(function(eachData) {
-      renderTile(ctx, eachData.svg, {x: eachData.x, y: eachData.y})
+    arr.forEach(function(data) {
+      console.log("HERE");
+      renderTile(ctx, data.svg, {x: data.x, y: data.y})
     });
+
+  }
+
+  function hexFetch(hex){
+      return fetch('/color/' + hex)
   }
 
   //reference: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas
