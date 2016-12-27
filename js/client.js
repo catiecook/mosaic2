@@ -8,14 +8,6 @@
   //render original image
   var imageLoad = document.getElementById("photo--upload");
 
-  imageLoad.addEventListener('change', function() {
-    var fileSize = imageLoad.files[0].size;
-    if(fileSize > 48000){
-      document.querySelector(".warning").innerHTML = "The file is too large, choose something 250px square or smaller.";
-      document.getElementById('photo--upload').value = "";
-      return;
-    }
-  });
 
   var originalCanvas = document.getElementById('original');
   var originalContext = originalCanvas.getContext('2d');
