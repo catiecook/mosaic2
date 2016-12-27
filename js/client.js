@@ -138,35 +138,34 @@
       chunk = tileData.splice(0, chunkSize)
     }
 
-    //counters for while loop
     var indexCount = 0;
     var i = 0;
-    console.log("1 BEFORE", masterSvg);
-    while (indexCount < hexArray.length){
+    function fetchNextColor() {
       hexFetch(hexArray[indexCount])
         .then(function(response){
-          //returns promise that resolves with text/string
-          return response.text()
+          return response.text();
         })
         .then(function(result){
+          console.log(result);
           masterSvg.push({svg: result, x: positions[i].x, y: positions[i].y})
-          i++
-        })
-      indexCount++
+          indexCount++;
+          i++;
+          if(indexCount >= hexArray.length) {
+            renderRows(masterSvg, finalCtx, finalCanvas);
+          } else {
+            fetchNextColor();
+          }
+        });
     }
-    Promise.all(masterSvg).then(function(){
-      console.log("data", masterSvg);
-      renderRows(masterSvg, finalCtx, finalCanvas);
-    })
 
-    //map thru array of hex values, return fetch promises into array and may thru that arry, resolving each piece accordingly.
+    fetchNextColor();
+
 };
 
 
   //render the rows, each thru the array or svg and (x.y) positions, and place onto screen.
   function renderRows(arr, ctx, canvas) {
     arr.forEach(function(data) {
-      console.log("HERE");
       renderTile(ctx, data.svg, {x: data.x, y: data.y})
     });
 
