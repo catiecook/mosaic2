@@ -8,4 +8,3 @@ if (exports) {
   exports.TILE_WIDTH = TILE_WIDTH;
   exports.TILE_HEIGHT = TILE_HEIGHT;
 }
-
