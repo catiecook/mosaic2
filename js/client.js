@@ -33,7 +33,7 @@ function loadOriginalImage(e) {
     return true;
 };
 
-    //everything runs on change of input
+//everything runs on change of input
 function handleImage(e) {
   var reader = new FileReader();
   reader.onload = function(event){
@@ -48,7 +48,7 @@ function handleImage(e) {
   reader.readAsDataURL(e.target.files[0]);
   return true;
 };
-  //function to get image meta data, and coordinates associated with it.
+//function to get image meta data, and coordinates associated with it.
 function makeTile(imageData, x, y) {
   this.hex = rgbToHex(imageData);
   this.x = x * TILE_WIDTH;
@@ -64,14 +64,13 @@ function readImageData(sourceImage) {
   return ctx;
 };
 
-  //getting initial data for tiles
+//getting initial data for tiles
 function getTileData(sourceImage) {
   var counter = 0
   var tile = [];
   var context = readImageData(sourceImage);
   var numX = sourceImage.width / TILE_WIDTH;
   var numY = sourceImage.height / TILE_HEIGHT;
-  //getImageData built in pixel data reader function from canvas
   //returns the RGB
   var data = context.getImageData(0, 0, numX, numY).data;
   //for loop pushing the hex color into object typedArray
@@ -103,6 +102,7 @@ function drawMos(image) {
   //split tiles into 16x16 chunks
   chunk = tileData.splice(0, chunkSize)
   //while chunks exist break it into arrays of data
+  //loop thru and push hex and correct x,y coords
   while(chunk.length !== 0) {
     for(var i = 0; i< chunk.length; i++){
       chunk.map(function(data) {
@@ -116,6 +116,7 @@ function drawMos(image) {
     //re-allocate to next chunk
     chunk = tileData.splice(0, chunkSize)
   }
+  //counter for fetchNextColor function to prevent infinate loop
   var count = hexArray.length;
   var i = 0;
   fetchNextColor(hexArray, positions, masterSvg, finalCanvas, finalCtx, count, i);
