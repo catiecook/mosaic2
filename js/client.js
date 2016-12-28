@@ -95,7 +95,6 @@ function drawMos(image) {
   var chunkSize, chunk, tileData;
   var hexArray = [];
   var positions = [];
-  var allSvg = [];
   var masterSvg = [];
 
   //set it so each chunk equalls 16x16px squares
