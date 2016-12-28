@@ -7,10 +7,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 });
 
+// globals
 var canvas = document.createElement('canvas');
 var ctx = canvas.getContext('2d');
 var DOMURL = window.URL || window.webkitURL || window;
 
+//triggor
 function handleUpload(e){
   loadOriginalImage(e);
   handleImage(e);
