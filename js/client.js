@@ -116,7 +116,6 @@ function drawMos(image) {
     //re-allocate to next chunk
     chunk = tileData.splice(0, chunkSize)
   }
-
   var count = hexArray.length;
   var i = 0;
   fetchNextColor(hexArray, positions, masterSvg, finalCanvas, finalCtx, count, i);
