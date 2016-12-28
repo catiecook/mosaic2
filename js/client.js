@@ -98,12 +98,12 @@ function drawMos(image) {
   var allSvg = [];
   var masterSvg = [];
 
-    //set it so each chunk equalls 16x16px squares
+  //set it so each chunk equalls 16x16px squares
   chunkSize = image.width / TILE_WIDTH;
   tileData = getTileData(image);
   //split tiles into 16x16 chunks
   chunk = tileData.splice(0, chunkSize)
-    //while chunks exist break it into arrays of data
+  //while chunks exist break it into arrays of data
   while(chunk.length !== 0) {
     for(var i = 0; i< chunk.length; i++){
       chunk.map(function(data) {
@@ -114,33 +114,37 @@ function drawMos(image) {
         positions.push({x: posX, y: posY})
       })
     }
-      //re-allocate to next chunk
+    //re-allocate to next chunk
     chunk = tileData.splice(0, chunkSize)
   }
 
-  var indexCount = 0;
+  var count = hexArray.length;
   var i = 0;
-  function fetchNextColor() {
-    hexFetch(hexArray[indexCount])
-      .then(function(response){
-        return response.text();
-      })
-      .then(function(result){
-        masterSvg.push({svg: result, x: positions[i].x, y: positions[i].y})
-        indexCount++;
-        i++;
-        if(indexCount >= hexArray.length) {
-          renderRows(masterSvg, finalCtx, finalCanvas);
-        } else {
-          fetchNextColor();
-        }
-      })
-      .catch(function(error){
-        console.log(error);
-      });
-  };
-  fetchNextColor();
+  fetchNextColor(hexArray, positions, masterSvg, finalCanvas, finalCtx, count, i);
 };
+
+function fetchNextColor(hexArray, positions, arr, canvas, context, count, i) {
+  hexFetch(hexArray[i])
+    .then(function(response){
+      return response.text();
+    })
+    .then(function(result){
+      if(i >= count-1) {
+        renderRows(arr, context, canvas);
+      } else {
+        arr.push({svg: result, x: positions[i].x, y: positions[i].y})
+        i++;
+        fetchNextColor(hexArray, positions, arr, canvas, context, count, i);
+      }
+    })
+    .catch(function(error){
+      console.log(error);
+    });
+};
+
+function countIndex(index) {
+  return index++;
+}
 
 //render the rows, each thru the array or svg and (x.y) positions, and place onto screen.
 function renderRows(arr, ctx, canvas) {
@@ -186,7 +190,6 @@ function renderTile(ctx, svg, coords) {
   return canvas;
 };
 
-  //***got the equation for rgb -> hex conversion functions at http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
 function compToHex(item) {
   var hex = item.toString(16);
   return hex.length == 1 ? '0' + hex : hex; //look up this syntax
@@ -196,7 +199,6 @@ function rgbToHex(rgb) {
   return compToHex(rgb[0]) + compToHex(rgb[1]) + compToHex(rgb[2]);
 };
 
-  //reference http://stackoverflow.com/questions/34913541/adding-an-uploaded-file-as-an-image-element-in-an-svg
 function getHttp(svgUrl) {
   fetch(svgUrl);
 };
@@ -208,3 +210,5 @@ function run(image) {
 //*** references ***
 // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas
 // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas
+//rgb -> hex conversion functions http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+// http://stackoverflow.com/questions/34913541/adding-an-uploaded-file-as-an-image-element-in-an-svg
