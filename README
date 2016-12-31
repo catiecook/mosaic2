@@ -1,6 +1,7 @@
 Photo mosaic
 ------------
 
+
 The goal of this task is to implement the following flow in a client-side app.
 1. A user selects a local image file.
 2. The app loads that image, divides the image into tiles, computes the average
