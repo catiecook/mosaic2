@@ -62,26 +62,21 @@ function drawMos(finalCanvas, finalCtx, chunkInfo) {
 
   //split tiles into 16x16 chunks
   var chunk = createChunk(tileData, chunkSize);
-  //while chunks exist break it into arrays of data
-  //loop thru and push hex and correct x,y coords
-  while(chunk.length !== 0) {
+
+  while(chunk.length !== 0){
+    var gen = chunkGen(chunk, hexArray, positions)
     for(var i = 0; i< chunk.length; i++){
-      chunk.map(function(data) {
-        var hex = data.hex;
-        var posX = data.x;
-        var posY = data.y;
-        hexArray.push(hex)
-        positions.push({x: posX, y: posY})
-      })
+      gen.next(chunk, hexArray, positions)
     }
-    //re-allocate to next chunk
     chunk = createChunk(tileData, chunkSize);
   }
+
   //counter for fetchNextColor function to prevent infinate loop
   var count = hexArray.length;
   var i = 0;
   fetchNextColor(hexArray, positions, masterSvg, finalCanvas, finalCtx, count, i);
 };
+
 //create canvas for rendering onto
 //returns canvas and context for it
 function newCanvas(image) {
@@ -96,6 +91,22 @@ function newCanvas(image) {
       width: canvas.width,
       height: canvas.height
     }
+};
+
+//generator to iterate over mapping data
+function* chunkGen(chunk, hexArray, positions){
+  yield chunkMap(chunk, hexArray, positions);
+};
+
+//map over chunk data - this and the generator allow for faster rendering, and larger image handling
+function chunkMap(chunk, hexArray, positions){
+  chunk.map(function(data) {
+    var hex = data.hex;
+    var posX = data.x;
+    var posY = data.y;
+    hexArray.push(hex)
+    positions.push({x: posX, y: posY})
+  })
 };
 
 //data for each pixel info chunk
