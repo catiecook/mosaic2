@@ -33,14 +33,15 @@ function handleImage(e) {
   reader.onload = function(event){
     const sourceImage = new Image();
     sourceImage.onload = function() {
-      canvas.width = sourceImage.width;
-      canvas.height = sourceImage.height;
 
       const canvasData = newCanvas(sourceImage);
       const chunkInfo = getChunkData(sourceImage);
 
       const finalCanvas = canvasData.canvas;
       const finalCtx = canvasData.ctx;
+
+      canvas.width = canvasData.width;
+      canvas.height = canvasData.height;
 
       drawMos(finalCanvas, finalCtx, chunkInfo);
     }
@@ -93,7 +94,9 @@ function newCanvas(image) {
 
     return {
       canvas: canvas,
-      ctx: ctx
+      ctx: ctx,
+      width: canvas.width,
+      height: canvas.height
     }
 };
 
