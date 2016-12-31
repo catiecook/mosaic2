@@ -53,8 +53,6 @@ function handleImage(e) {
 };
 
 function drawMos(finalCanvas, finalCtx, chunkInfo) {
-  console.log(chunkInfo);
-
   var hexArray = [];
   var positions = [];
   var masterSvg = [];
