@@ -1,0 +1,21 @@
+{
+  "name": "mosaic",
+  "version": "1.0.0",
+  "description": "![screen shot 2016-12-31 at 1 10 09 am](https://cloud.githubusercontent.com/assets/15387439/21579488/6b27dc96-cf6f-11e6-8468-e6a133559900.png)",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/catiecook/mosaic2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/catiecook/mosaic2/issues"
+  },
+  "homepage": "https://github.com/catiecook/mosaic2#readme"
+}
