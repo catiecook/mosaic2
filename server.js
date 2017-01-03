@@ -23,7 +23,7 @@ http.createServer(function (req, res) {
   var m;
   if (pathname == '/') {
     res.writeHead(200, {'Content-Type': 'text/html'});
-    fs.createReadStream(dir + '/mosaic.html').pipe(res);
+    fs.createReadStream(dir + '/index.html').pipe(res);
     return;
   } else if (m = pathname.match(/^\/(js|css)\//)) {
     var filename = dir + pathname;
