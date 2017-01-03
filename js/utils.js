@@ -13,6 +13,12 @@ function handleUpload(e){
 function loadOriginalImage(e) {
   var originalCanvas = document.getElementById('original');
   var originalContext = originalCanvas.getContext('2d');
+
+  var input = document.getElementById("photo--upload")
+  var file = input.files[0]
+  console.log("size", file.size);
+
+
     var reader = new FileReader();
     reader.onload = function(event){
       const img = new Image();
@@ -32,8 +38,8 @@ function handleImage(e) {
   const reader = new FileReader();
   reader.onload = function(event){
     const sourceImage = new Image();
-    sourceImage.onload = function() {
 
+    sourceImage.onload = function() {
       const canvasData = newCanvas(sourceImage);
       const chunkInfo = getChunkData(sourceImage);
 
