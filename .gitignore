@@ -1,4 +1,3 @@
-.DS_Store
-README
-.env
 node_modules
+.env
+.DS_Store
