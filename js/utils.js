@@ -133,6 +133,7 @@ function createChunk(data, size) {
 //function to get image meta data, and coordinates associated with it.
 function makeTile(imageData, x, y) {
   this.hex = rgbToHex(imageData);
+  // console.log(imageData)
   this.x = x * TILE_WIDTH;
   this.y = y * TILE_HEIGHT;
 };
@@ -181,7 +182,7 @@ function fetchNextColor(hexArray, positions, arr, canvas, context, count, i) {
       }
     })
     .catch(function(error){
-      console.log(error);
+      (error);
     });
 };
 
@@ -234,11 +235,17 @@ function renderTile(ctx, svg, coords) {
 };
 
 function compToHex(item) {
+  // ("item", item, typeof item)
+  if(item === undefined) {
+    item = 100
+  }
   var hex = item.toString(16);
+  // ("hex", hex)
   return hex.length == 1 ? '0' + hex : hex; //look up this syntax
 };
 
 function rgbToHex(rgb) {
+  // ("rgb", rgb, typeof rgb)
   return compToHex(rgb[0]) + compToHex(rgb[1]) + compToHex(rgb[2]);
 };
 
