@@ -16,8 +16,6 @@ function loadOriginalImage(e) {
 
   var input = document.getElementById("photo--upload")
   var file = input.files[0]
-  console.log("size", file.size);
-
 
     var reader = new FileReader();
     reader.onload = function(event){
@@ -100,23 +98,23 @@ function newCanvas(image) {
 };
 
 //generator to iterate over mapping data
-function* chunkGen(chunk, hexArray, positions){
+function* chunkGen(chunk, hexArray, positions) {
   yield chunkMap(chunk, hexArray, positions);
 };
 
 //map over chunk data - this and the generator allow for faster rendering, and larger image handling
-function chunkMap(chunk, hexArray, positions){
+function chunkMap(chunk, hexArray, positions) {
   chunk.map(function(data) {
     var hex = data.hex;
     var posX = data.x;
     var posY = data.y;
-    hexArray.push(hex)
+    hexArray.push(hex);
     positions.push({x: posX, y: posY})
   })
 };
 
 //data for each pixel info chunk
-function getChunkData(image){
+function getChunkData(image) {
   const chunkSize = image.width / TILE_WIDTH;
   const tileData = getTileData(image);
 
@@ -133,7 +131,6 @@ function createChunk(data, size) {
 //function to get image meta data, and coordinates associated with it.
 function makeTile(imageData, x, y) {
   this.hex = rgbToHex(imageData);
-  // console.log(imageData)
   this.x = x * TILE_WIDTH;
   this.y = y * TILE_HEIGHT;
 };
@@ -224,11 +221,11 @@ function renderTile(ctx, svg, coords) {
       try {
         ctx.drawImage(image, coords.x, coords.y);
         ctx.imageSmoothingEnabled = false;
-        ctx.mozImageSmoothingEnabled = false;
+        ctx.imageSmoothingEnabled = false;
         revokeUrl(url)
       }
       catch(error){
-        throw new Error("the image was probably too large, try something around 200px wide");
+        throw new Error("The image may have been too large");
       }
     }
   return canvas;
